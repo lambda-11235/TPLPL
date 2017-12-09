@@ -1,10 +1,10 @@
-name:                logic-lang
-version:             0.1.0.0
-synopsis:            A simple implementation of logic language.
+name:                tplpl
+version:             0.0.1
+synopsis:            A pure logic programming language.
 -- description:
--- homepage:            https://github.com/lambda-11235/lambda-calc
+homepage:            https://github.com/lambda-11235/tplpl
 license:             BSD3
---license-file:        LICENSE
+license-file:        LICENSE
 author:              Taran Lynn
 maintainer:          taranlynn0@gmail.com
 copyright:           2017 Taran Lynn
@@ -13,7 +13,7 @@ build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.24
 
-executable logic-lang
+executable tplpl
   hs-source-dirs:      src
   main-is:             Main.hs
   other-modules:       Data, Unify, Query, Lexer, Parser
@@ -22,6 +22,6 @@ executable logic-lang
   build-tools:         alex
   default-language:    Haskell2010
 
---source-repository head
---  type:     git
---  location: https://github.com/lambda-11235/lambda-calc
+source-repository head
+  type:     git
+  location: https://github.com/lambda-11235/tplpl

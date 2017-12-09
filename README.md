@@ -1,7 +1,7 @@
 
-# Logic Lang
+# TPLPL
 
-Logic lang is a pure logic programming language. The only data type supported is
+TPLPL is a pure logic programming language. The only data type supported is
 a structure (e.g. foo(...)), although parenthesis may by ommitted on zero arity
 stuctures (`foo = foo()`), making them act like atoms. Only horn clauses and
 unification are supported, cuts and negation by failure are not.
