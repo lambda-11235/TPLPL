@@ -30,7 +30,3 @@ member(?X, cons(?Y, ?Xs)) :- member(?X, ?Xs).
 
 append(nil, ?Ys, ?Ys).
 append(cons(?X, ?Xs), ?Ys, cons(?X, ?Zs)) :- append(?Xs, ?Ys, ?Zs).
-
-
-test(?X) :- test(?X).
-test(?X) :- true, true.

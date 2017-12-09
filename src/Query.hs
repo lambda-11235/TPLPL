@@ -23,15 +23,15 @@ type Rules = M.Map String [Rule]
 
 -- | Performs a query with the given rules. Returns a list of possible
 -- unifications. An empty list denotes failure.
-query :: Rules -> Query -> [Unification]
-query = query' 1 M.empty
+queryDF :: Rules -> Query -> [Unification]
+queryDF = query' 1 M.empty
 
 -- The first argument is used to generate unique variable names for matched
 -- rules. The basic operation of this algorithm is to match the first subgoal to
 -- a rule, expand it, and repeat until we have no subgoals.
-query' :: Int -> Unification -> Rules -> Query -> [Unification]
-query' d u rules [] = [u]
-query' d u rules (q:qs) =
+queryDF' :: Int -> Unification -> Rules -> Query -> [Unification]
+queryDF' d u rules [] = [u]
+queryDF' d u rules (q:qs) =
   do (subgoals, u') <- matches d u rules q
      u'' <- query' (d + 1) u' rules (subgoals ++ qs)
      return (simplify u'')
@@ -45,18 +45,19 @@ queryBF rules qs = queryBF' 1 rules [(qs, M.empty)]
 -- technique here is to find all possible rule matches for all goals, check if
 -- any result in success for the goal, and then repeat.
 queryBF' :: Int -> Rules -> [(Query, Unification)] -> [Unification]
+queryBF' _ _ [] = []
 queryBF' d rules qss =
-  let qss' = qss >>= (\(qs, u) -> flat u [] qs)
-      succ = filter ((== 0) . length . fst) qss'
-      cont = filter ((/= 0) . length . fst) qss'
+  let qss' = qss >>= (\(qs, u) -> expandRules u [] qs)
+      succ = filter (null . fst) qss'
+      cont = filter (not . null . fst) qss'
   in
-    fmap snd succ ++ queryBF' (d + 1) rules cont
+    fmap (simplify . snd) succ ++ queryBF' (d + 1) rules cont
   where
-    flat :: Unification -> Query -> Query -> [(Query, Unification)]
-    flat u qs [] = []
-    flat u qs1 (q:qs2) =
+    expandRules :: Unification -> Query -> Query -> [(Query, Unification)]
+    expandRules u qs [] = []
+    expandRules u qs1 (q:qs2) =
       let t = fmap (\(sgs, u') -> (qs1 ++ sgs ++ qs2, u')) (matches d u rules q) in
-          t ++ (flat u (qs1 ++ [q]) qs2)
+          t ++ (expandRules u (qs1 ++ [q]) qs2)
 
 
 -- Finds all matches to a subgoal, and return them as a list of subgoals and

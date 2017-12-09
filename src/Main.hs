@@ -35,7 +35,7 @@ repl rules =
          Left err -> print err
 
          Right qs ->
-           ppResults (Q.query rules qs)
+           ppResults (Q.queryBF rules qs)
      repl rules
 
 
