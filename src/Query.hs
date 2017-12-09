@@ -2,10 +2,11 @@
 module Query ( Rule (..)
              , Query
              , Rules
-             , query)
+             , query
+             , queryBF)
                where
 
-import Data.Map as M
+import qualified Data.Map as M
 import Data.Maybe (catMaybes)
 
 import Data
@@ -17,7 +18,7 @@ data Rule = Rule [Data] [Data]
   deriving (Eq, Show)
 
 type Query = [Data]
-type Rules = Map String [Rule]
+type Rules = M.Map String [Rule]
 
 
 -- | Performs a query with the given rules. Returns a list of possible
@@ -34,6 +35,28 @@ query' d u rules (q:qs) =
   do (subgoals, u') <- matches d u rules q
      u'' <- query' (d + 1) u' rules (subgoals ++ qs)
      return (simplify u'')
+
+
+-- | Like query, but tries breadth first.
+queryBF :: Rules -> Query -> [Unification]
+queryBF rules qs = queryBF' 1 rules [(qs, M.empty)]
+
+-- The third argument is a list of goals with their unifications. The general
+-- technique here is to find all possible rule matches for all goals, check if
+-- any result in success for the goal, and then repeat.
+queryBF' :: Int -> Rules -> [(Query, Unification)] -> [Unification]
+queryBF' d rules qss =
+  let qss' = qss >>= (\(qs, u) -> flat u [] qs)
+      succ = filter ((== 0) . length . fst) qss'
+      cont = filter ((/= 0) . length . fst) qss'
+  in
+    fmap snd succ ++ queryBF' (d + 1) rules cont
+  where
+    flat :: Unification -> Query -> Query -> [(Query, Unification)]
+    flat u qs [] = []
+    flat u qs1 (q:qs2) =
+      let t = fmap (\(sgs, u') -> (qs1 ++ sgs ++ qs2, u')) (matches d u rules q) in
+          t ++ (flat u (qs1 ++ [q]) qs2)
 
 
 -- Finds all matches to a subgoal, and return them as a list of subgoals and

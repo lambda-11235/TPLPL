@@ -65,8 +65,8 @@ ppResults (u:us) = do ppRes u
                         return ()
   where
     ppRes u =
-      do let ss = intersperse ", " $ do (Id s n, x) <- M.toList u
+      do let ss = intersperse ", " $ do (id@(Id _ n), x) <- M.toList u
                                         guard (n == 0)
-                                        return ("?" ++ s ++ " = " ++ prettyPrint x)
+                                        return (prettyPrint (Var id) ++ " = " ++ prettyPrint x)
          if null ss then putStr "true" else mapM_ putStr ss
          putStrLn ""
