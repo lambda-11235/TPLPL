@@ -1,5 +1,6 @@
 
 true.
+false :- eq(a, b).
 
 eq(?X, ?X).
 
@@ -20,6 +21,9 @@ add(s(?N), ?M, s(?R)) :- add(?N, ?M, ?R).
 
 list(nil).
 list(cons(?X, ?Xs)) :- list(?Xs).
+
+insert(?X, ?Xs, cons(?X, ?Xs)).
+insert(?X, cons(?Y, ?Xs), cons(?Y, ?Ys)) :- insert(?X, ?Xs, ?Ys).
 
 member(?X, cons(?X, ?Xs)).
 member(?X, cons(?Y, ?Xs)) :- member(?X, ?Xs).
