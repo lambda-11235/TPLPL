@@ -1,6 +1,6 @@
 
 # An example of a lambda calculus interpreter. This shows that TPLPL is turing
-# complete
+# complete. Here we use de Bruijn indices for variables.
 #
 # Term := var(Index)
 #       | lambda(Term)
