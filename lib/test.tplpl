@@ -1,4 +1,4 @@
 
 # A test that breadth first search really works.
 bf_test(?X) :- bf_test(?X).
-bf_test(?X).
+bf_test(a).

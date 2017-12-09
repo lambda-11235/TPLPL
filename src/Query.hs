@@ -2,7 +2,7 @@
 module Query ( Rule (..)
              , Query
              , Rules
-             , query
+             , queryDF
              , queryBF)
                where
 
@@ -24,7 +24,7 @@ type Rules = M.Map String [Rule]
 -- | Performs a query with the given rules. Returns a list of possible
 -- unifications. An empty list denotes failure.
 queryDF :: Rules -> Query -> [Unification]
-queryDF = query' 1 M.empty
+queryDF = queryDF' 1 M.empty
 
 -- The first argument is used to generate unique variable names for matched
 -- rules. The basic operation of this algorithm is to match the first subgoal to
@@ -33,7 +33,7 @@ queryDF' :: Int -> Unification -> Rules -> Query -> [Unification]
 queryDF' d u rules [] = [u]
 queryDF' d u rules (q:qs) =
   do (subgoals, u') <- matches d u rules q
-     u'' <- query' (d + 1) u' rules (subgoals ++ qs)
+     u'' <- queryDF' (d + 1) u' rules (subgoals ++ qs)
      return (simplify u'')
 
 
