@@ -35,35 +35,41 @@ ID = ? [a-zA-Z][_a-zA-Z0-9]* ? ;
 
 ## Examples
 
+See `lib/*` for examples. Below is an example consultation session.
+
 ```
-true.
-
-eq(?X, ?X).
-
-number(z).
-number(s(?N)) :- number(?N).
-
-add(z, ?N, ?N).
-add(s(?N), ?M, s(?R)) :- add(?N, ?M, ?R).
-
-
-# In REPL
+> stack build
+...
+> stack exec tplpl lib/core.tplpl
 :- true.
 true
 
-:- eq(foo, foo()).
+:- eq(a, a).
 true
 
-:- add(?N, ?M, ?R).
-?M = ?R, ?N = z
-;
-?M = ?R_1, ?N = s(z), ?R = s(?R_1)
-;
-?M = ?R_2, ?N = s(s(z)), ?R = s(s(?R_2))
-;
-?M = ?R_3, ?N = s(s(s(z))), ?R = s(s(s(?R_3)))
-;
-?M = ?R_4, ?N = s(s(s(s(z)))), ?R = s(s(s(s(?R_4))))
+:- eq(A, a).
+false
+:- eq(?X, a).
+?X = a
 
+:- list(?L).
+?L = nil
+;
+?L = cons(?X_1, nil)
+;
+?L = cons(?X_1, cons(?X_2, nil))
+;
+?L = cons(?X_1, cons(?X_2, cons(?X_3, nil)))
+
+:- add(?N, ?M, s(s(s(z)))).
+?M = s(s(s(z))), ?N = z
+;
+?M = s(s(z)), ?N = s(z)
+;
+?M = s(z), ?N = s(s(z))
+;
+?M = z, ?N = s(s(s(z)))
+;
+false
 :-
 ```

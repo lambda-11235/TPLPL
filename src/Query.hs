@@ -20,9 +20,14 @@ type Query = [Data]
 type Rules = Map String [Rule]
 
 
+-- | Performs a query with the given rules. Returns a list of possible
+-- unifications. An empty list denotes failure.
 query :: Rules -> Query -> [Unification]
 query = query' 1 M.empty
 
+-- The first argument is used to generate unique variable names for matched
+-- rules. The basic operation of this algorithm is to match the first subgoal to
+-- a rule, expand it, and repeat until we have no subgoals.
 query' :: Int -> Unification -> Rules -> Query -> [Unification]
 query' d u rules [] = [u]
 query' d u rules (q:qs) =
@@ -31,7 +36,7 @@ query' d u rules (q:qs) =
      return (simplify u'')
 
 
--- Finds all matches to a goal, and return them as a list of subgoals and
+-- Finds all matches to a subgoal, and return them as a list of subgoals and
 -- unification results.
 matches :: Int -> Unification -> Rules -> Data -> [([Data], Unification)]
 matches d u rules (Var s) =
