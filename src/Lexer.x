@@ -4,8 +4,6 @@ module Lexer (Token (..), LexOut (..), scan) where
 
 %wrapper "posn"
 
-@character = [a-zA-Z]
-
 tokens :-
 
   $white+                               ;
@@ -16,7 +14,7 @@ tokens :-
   "."                                   { \p s -> lexOut p LDot }
   "?"                                   { \p s -> lexOut p LQMark }
   ":-"                                  { \p s -> lexOut p LImplied }
-  @character+                           { \p s -> lexOut p (LId s) }
+  [a-zA-Z][_a-zA-Z0-9]*                 { \p s -> lexOut p (LId s) }
 
 {
 data Token = LLParen

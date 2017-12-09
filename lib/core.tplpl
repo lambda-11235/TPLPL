@@ -7,6 +7,13 @@ eq(?X, ?X).
 number(z).
 number(s(?N)) :- number(?N).
 
+lessThan(z, s(?N)).
+lessThan(s(?N), s(?M)) :- lessThan(?N, ?M).
+
+notEqual(z, s(?M)).
+notEqual(s(?N), z).
+notEqual(s(?N), s(?M)) :- notEqual(?N, ?M).
+
 add(z, ?N, ?N).
 add(s(?N), ?M, s(?R)) :- add(?N, ?M, ?R).
 

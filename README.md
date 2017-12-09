@@ -30,7 +30,7 @@ query = and , '.' ;
 
 rule = term , [ ':-' , and ] , '.' ;
 
-ID = ? [a-zA-Z]+ ? ;
+ID = ? [a-zA-Z][_a-zA-Z0-9]* ? ;
 ```
 
 ## Examples
