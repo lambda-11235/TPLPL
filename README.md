@@ -2,14 +2,17 @@
 # TPLPL
 
 TPLPL is a pure logic programming language. The only data type supported is
-a structure (e.g. foo(...)), although parenthesis may by ommitted on zero arity
-stuctures (`foo = foo()`), making them act like atoms. Only horn clauses and
-unification are supported, cuts and negation by failure are not.
+a structure (e.g. foo(...)), although parenthesis may by omitted on zero arity
+structures (`foo = foo()`), making them act like atoms. Only horn clauses and
+unification are supported, cuts and negation by failure are not. Note that
+variables start with a `?`, and are not indicated by being capitalized (as in
+Prolog).
 
 Future goals include:
 1. Making the search algorithm breadth first. Although this is very inefficient,
    it does go along with the theme of a pure logic language.
-2. Add readline support. Currently stack complains if it is used as a depenency.
+2. Add readline support. Currently stack complains if it is used as a
+   dependency.
 
 ## EBNF Grammar
 
