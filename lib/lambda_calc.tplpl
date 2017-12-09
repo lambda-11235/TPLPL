@@ -1,6 +1,7 @@
 
 # An example of a lambda calculus interpreter. This shows that TPLPL is turing
-# complete. Here we use de Bruijn indices for variables.
+# complete. Here we use de Bruijn indices for variables. Only works well with
+# depth first search.
 #
 # Term := var(Index)
 #       | lambda(Term)
