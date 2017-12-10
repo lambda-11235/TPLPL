@@ -6,13 +6,12 @@ a structure (e.g. foo(...)), although parenthesis may by omitted on zero arity
 structures (`foo = foo()`), making them act like atoms. Only horn clauses and
 unification are supported, cuts and negation by failure are not. Note that
 variables start with a `?`, and are not indicated by being capitalized (as in
-Prolog). TPLPL also uses breadth first searches, so order of clauses and
-subgoals do not matter.
+Prolog). TPLPL also uses breadth first searches by default, so order of clauses
+and subgoals do not matter. Since breadth first searches tend to crash due to
+high memory usage, depth-first search may be enabled with `--depth-first`.
 
 Future goals include:
-1. Add flag to enable depth first search. Right now, it can be enabled by
-   changing `queryBF` to `queryDF` in `Main.hs`.
-2. Add readline support. Currently stack complains if it is used as a
+1. Add readline support. Currently stack complains if it is used as a
    dependency.
 
 ## EBNF Grammar

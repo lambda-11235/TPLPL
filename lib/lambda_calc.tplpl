@@ -1,7 +1,7 @@
 
 # An example of a lambda calculus interpreter. This shows that TPLPL is turing
 # complete. Here we use de Bruijn indices for variables. Only works well with
-# depth first search.
+# depth-first search, breadth-first uses too much memory.
 #
 # Term := var(Index)
 #       | lambda(Term)
@@ -9,9 +9,16 @@
 #
 # Index = z | s(Index)
 
-eval(lambda(?X), lambda(?Y)) :- eval(?X, ?Y).
-eval(ap(lambda(?X), ?Y), ?Z) :- subst(?X, ?Y, ?T), eval(?T, ?Z).
-eval(?X, ?X).
+
+eval(?X, ?Y) :- reduce(?X, ?Y), normal_form(?Y).
+
+normal_form(var(?N)).
+normal_form(lambda(?X)) :- normal_form(?X).
+normal_form(ap(var(?N), ?X)) :- normal_form(?X).
+
+reduce(lambda(?X), lambda(?Y)) :- reduce(?X, ?Y).
+reduce(ap(lambda(?X), ?Y), ?Z) :- subst(?X, ?Y, ?T), reduce(?T, ?Z).
+reduce(?X, ?X).
 
 subst(?X, ?Y, ?Z) :- subst(?X, ?Y, ?Z, z).
 subst(var(?N), ?Y, ?Y, ?N).

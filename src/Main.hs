@@ -20,23 +20,25 @@ import Text.Parsec.Prim
 
 
 main :: IO ()
-main = do files <- getArgs
+main = do args <- getArgs
+          let query = if elem "--depth-first" args then queryDF else queryBF
+          let files = filter (\s -> null s || head s /= '-') args
           rules <- loadFiles files
-          seq rules (repl rules)
+          seq rules (repl query rules)
 
-repl :: Rules -> IO a
-repl rules =
+repl :: QueryControl -> Rules -> IO a
+repl query rules =
   do putStr ":- "
      hFlush stdout
      str <- getLine
-     toks <- catch (evaluate (scan str)) (\e -> print (e :: ErrorCall) >> repl rules)
-     if null toks then repl rules else
+     toks <- catch (evaluate (scan str)) (\e -> print (e :: ErrorCall) >> repl query rules)
+     if null toks then return () else
        case runParser P.query () "REPL" toks of
          Left err -> print err
 
          Right qs ->
-           ppResults (Q.queryBF rules qs)
-     repl rules
+           ppResults (query rules qs)
+     repl query rules
 
 
 loadFiles :: [String] -> IO Rules

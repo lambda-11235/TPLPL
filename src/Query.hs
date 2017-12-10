@@ -2,6 +2,7 @@
 module Query ( Rule (..)
              , Query
              , Rules
+             , QueryControl
              , queryDF
              , queryBF)
                where
@@ -20,10 +21,17 @@ data Rule = Rule [Data] [Data]
 type Query = [Data]
 type Rules = M.Map String [Rule]
 
-
 -- | Performs a query with the given rules. Returns a list of possible
 -- unifications. An empty list denotes failure.
-queryDF :: Rules -> Query -> [Unification]
+type QueryControl = Rules -> Query -> [Unification]
+
+-- | Limit memory usage.
+maxMemory = 2^20
+memoryError = error "Search used to much memory"
+
+
+-- | Depth-first search.
+queryDF :: QueryControl
 queryDF = queryDF' 1 M.empty
 
 -- The first argument is used to generate unique variable names for matched
@@ -32,13 +40,14 @@ queryDF = queryDF' 1 M.empty
 queryDF' :: Int -> Unification -> Rules -> Query -> [Unification]
 queryDF' d u rules [] = [u]
 queryDF' d u rules (q:qs) =
-  do (subgoals, u') <- matches d u rules q
+  do if d * length qs > maxMemory then memoryError else return ()
+     (subgoals, u') <- matches d u rules q
      u'' <- queryDF' (d + 1) u' rules (subgoals ++ qs)
      return (simplify u'')
 
 
--- | Like query, but tries breadth first.
-queryBF :: Rules -> Query -> [Unification]
+-- | Breadth-first search.
+queryBF :: QueryControl
 queryBF rules qs = queryBF' 1 rules [(qs, M.empty)]
 
 -- The third argument is a list of goals with their unifications. The general
@@ -51,7 +60,8 @@ queryBF' d rules qss =
       succ = filter (null . fst) qss'
       cont = filter (not . null . fst) qss'
   in
-    fmap (simplify . snd) succ ++ queryBF' (d + 1) rules cont
+    if (d * length qss' > maxMemory) then memoryError else
+      fmap (simplify . snd) succ ++ queryBF' (d + 1) rules cont
   where
     expandRules :: Unification -> Query -> Query -> [(Query, Unification)]
     expandRules u qs [] = []
