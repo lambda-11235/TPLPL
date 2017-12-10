@@ -53,6 +53,11 @@ false
 :- eq(?X, a).
 ?X = a
 
+:- or(false, false).
+false
+:- or(true, false).
+true
+
 :- list(?L).
 ?L = nil
 ;
