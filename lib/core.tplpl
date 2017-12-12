@@ -21,6 +21,12 @@ notEqual(s(?N), s(?M)) :- notEqual(?N, ?M).
 add(z, ?N, ?N).
 add(s(?N), ?M, s(?R)) :- add(?N, ?M, ?R).
 
+mult(z, ?M, z).
+mult(s(?N), ?M, ?R) :- mult(?N, ?M, ?T), add(?M, ?T, ?R).
+
+fact(z, s(z)).
+fact(s(?N), ?R) :- fact(?N, ?T), mult(s(?N), ?T, ?R).
+
 
 list(nil).
 list(cons(?X, ?Xs)) :- list(?Xs).
