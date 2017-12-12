@@ -43,7 +43,7 @@ queryDF' d u rules (q:qs) =
   do if d * length qs > maxMemory then memoryError else return ()
      (subgoals, u') <- matches d u rules q
      u'' <- queryDF' (d + 1) u' rules (subgoals ++ qs)
-     return (simplify u'')
+     maybe [] return (simplify u'')
 
 
 -- | Breadth-first search.
@@ -61,7 +61,7 @@ queryBF' d rules qss =
       cont = filter (not . null . fst) qss'
   in
     if (d * length qss' > maxMemory) then memoryError else
-      fmap (simplify . snd) succ ++ queryBF' (d + 1) rules cont
+      maybe [] id (mapM (simplify . snd) succ) ++ queryBF' (d + 1) rules cont
   where
     expandRules :: Unification -> Query -> Query -> [(Query, Unification)]
     expandRules u qs [] = []

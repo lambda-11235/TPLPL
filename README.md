@@ -7,12 +7,18 @@ structures (`foo = foo()`), making them act like atoms. Only horn clauses and
 unification are supported, cuts and negation by failure are not. Note that
 variables start with a `?`, and are not indicated by being capitalized (as in
 Prolog). TPLPL also uses breadth first searches by default, so order of clauses
-and subgoals do not matter. Since breadth first searches tend to crash due to
-high memory usage, depth-first search may be enabled with `--depth-first`.
+and subgoals do not matter.
 
 Future goals include:
 1. Add readline support. Currently stack complains if it is used as a
    dependency.
+
+## Notes
+
+1. Since breadth first searches tend to crash due to high memory usage,
+   depth-first search may be enabled with `--depth-first`.
+2. This implementation does an occurs check, and all recursive unifications
+   fail (even eq(?X, ?X)).
 
 ## EBNF Grammar
 

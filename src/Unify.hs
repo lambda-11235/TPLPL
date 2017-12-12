@@ -19,14 +19,12 @@ unifyMany m ((x, y):ps) = do m' <- unify m x y
 
 unify :: Unification -> Data -> Data -> Maybe Unification
 unify m (Var s) y =
-  if y == (Var s) then return $ insert s y m
-  else if occurs s y then Nothing else
+  if occurs s y then Nothing else
     case M.lookup s m of
       Just x -> unify m x y
       Nothing -> return $ insert s y m
 unify m x (Var s) =
-  if x == (Var s) then return $ insert s x m
-  else if occurs s x then Nothing else
+  if occurs s x then Nothing else
     case M.lookup s m of
       Just y -> unify m x y
       Nothing -> return $ insert s x m
@@ -45,12 +43,14 @@ occurs s (Var t) = s == t
 occurs s (Struct _ xs) = any (occurs s) xs
 
 
-simplify :: Unification -> Unification
-simplify m = M.map (simp m S.empty) m
+simplify :: Unification -> Maybe Unification
+simplify m = let xs = M.toList (M.map (simp m S.empty) m) in
+                 M.fromList <$> (mapM (mapM id) xs)
   where
+    simp :: Unification -> S.Set Id -> Data -> Maybe Data
     simp m occ (Var s) =
-      if S.member s occ then (Var s) else
+      if S.member s occ then Nothing else
         case M.lookup s m of
           Just x -> simp m (S.insert s occ) x
-          Nothing -> Var s
-    simp m occ (Struct t xs) = Struct t (fmap (simp m occ) xs)
+          Nothing -> return (Var s)
+    simp m occ (Struct t xs) = Struct t <$> (mapM (simp m occ) xs)
