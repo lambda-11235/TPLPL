@@ -27,6 +27,9 @@ mult(s(?N), ?M, ?R) :- mult(?N, ?M, ?T), add(?M, ?T, ?R).
 fact(z, s(z)).
 fact(s(?N), ?R) :- fact(?N, ?T), mult(s(?N), ?T, ?R).
 
+even(?N) :- mult(s(s(z)), ?M, ?N).
+odd(s(?N)) :- even(?N).
+
 
 list(nil).
 list(cons(?X, ?Xs)) :- list(?Xs).
