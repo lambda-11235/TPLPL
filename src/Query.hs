@@ -27,7 +27,7 @@ type QueryControl = Rules -> Query -> [Unification]
 
 -- | Limit memory usage.
 maxMemory = 2^20
-memoryError = error "Search used to much memory"
+memoryError = error "Search used too much memory"
 
 
 -- | Depth-first search.
