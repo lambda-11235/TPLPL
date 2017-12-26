@@ -58,17 +58,20 @@ loadFile rules file = do contents <- readFile file
 
 
 ppResults :: [Unification] -> IO ()
-ppResults [] = putStrLn "false"
-ppResults (u:us) = do ppRes u
-                      s <- getLine
-                      if s == ";" then
-                        ppResults us
-                      else
-                        return ()
+ppResults us = ppResults' (map (M.filterWithKey goodId) us)
+  where
+    goodId (Id _ n) _ = n == 0
+
+ppResults' [] = putStrLn "false"
+ppResults' (u:us) = do ppRes u
+                       s <- getLine
+                       if s == ";" then
+                         ppResults' (filter (/= u) us)
+                       else
+                         return ()
   where
     ppRes u =
-      do let ss = intersperse ", " $ do (id@(Id _ n), x) <- M.toList u
-                                        guard (n == 0)
+      do let ss = intersperse ", " $ do (id, x) <- M.toList u
                                         return (prettyPrint (Var id) ++ " = " ++ prettyPrint x)
          if null ss then putStr "true" else mapM_ putStr ss
          putStrLn ""
