@@ -11,17 +11,19 @@ eq(?X, ?X).
 number(z).
 number(s(?N)) :- number(?N).
 
-lessThan(z, s(?N)).
+succ(?N, s(?N)) :- number(?N).
+
+lessThan(z, s(?N)) :- number(?N).
 lessThan(s(?N), s(?M)) :- lessThan(?N, ?M).
 
-notEqual(z, s(?M)).
-notEqual(s(?N), z).
+notEqual(z, s(?M)) :- number(?M).
+notEqual(s(?N), z) :- number(?N).
 notEqual(s(?N), s(?M)) :- notEqual(?N, ?M).
 
-add(z, ?N, ?N).
+add(z, ?N, ?N) :- number(?N).
 add(s(?N), ?M, s(?R)) :- add(?N, ?M, ?R).
 
-mult(z, ?M, z).
+mult(z, ?M, z) :- number(?M).
 mult(s(?N), ?M, ?R) :- mult(?N, ?M, ?T), add(?M, ?T, ?R).
 
 fact(z, s(z)).
@@ -39,11 +41,11 @@ list(cons(?X, ?Xs)) :- list(?Xs).
 length(nil, z).
 length(cons(?X, ?Xs), s(?N)) :- length(?Xs, ?N).
 
-insert(?X, ?Xs, cons(?X, ?Xs)).
+insert(?X, ?Xs, cons(?X, ?Xs)) :- list(?Xs).
 insert(?X, cons(?Y, ?Xs), cons(?Y, ?Ys)) :- insert(?X, ?Xs, ?Ys).
 
-member(?X, cons(?X, ?Xs)).
+member(?X, cons(?X, ?Xs)) :- list(?Xs).
 member(?X, cons(?Y, ?Xs)) :- member(?X, ?Xs).
 
-append(nil, ?Ys, ?Ys).
+append(nil, ?Ys, ?Ys) :- list(?Ys).
 append(cons(?X, ?Xs), ?Ys, cons(?X, ?Zs)) :- append(?Xs, ?Ys, ?Zs).
