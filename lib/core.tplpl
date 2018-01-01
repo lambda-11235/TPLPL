@@ -49,3 +49,7 @@ member(?X, cons(?Y, ?Xs)) :- member(?X, ?Xs).
 
 append(nil, ?Ys, ?Ys) :- list(?Ys).
 append(cons(?X, ?Xs), ?Ys, cons(?X, ?Zs)) :- append(?Xs, ?Ys, ?Zs).
+
+reverse(?Xs, ?Ys) :- reverse(?Xs, nil, ?Ys).
+reverse(nil, ?Ys, ?Ys).
+reverse(cons(?X, ?Xs), ?Ts, ?Ys) :- reverse(?Xs, cons(?X, ?Ts), ?Ys).

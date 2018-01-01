@@ -1,0 +1,8 @@
+
+queue(q(?Xs, ?Ys)) :- list(?Xs), list(?Ys).
+
+enqueue(?X, q(?Xs, ?Ys), q(?Xs, cons(?X, ?Ys))).
+
+# Also acts like peek (i.e. dequeue(?Q, _, ?X)).
+dequeue(q(nil, ?Ys), q(?Zs, nil), ?R) :- reverse(?Ys, cons(?R, ?Zs)).
+dequeue(q(cons(?X, ?Xs), ?Ys), q(?Xs, ?Ys), ?X).
